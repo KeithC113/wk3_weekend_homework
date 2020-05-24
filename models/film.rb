@@ -44,6 +44,14 @@ attr_accessor :title, :price
     return Customer.map_items(customer_data)
   end
 
+# =>  Returns number of customers per film
+  def number_of_customers()
+    sql = "SELECT customers.* FROM customers INNER JOIN tickets ON tickets.customer_id = customer_id WHERE film_id = $1"
+    values = [@id]
+    customer_data = SqlRunner.run(sql, values)
+    return customer_data.count
+  end
+
 # =>  Delete all the entries from the film class
   def self.delete_all()
     sql = "DELETE FROM films"
@@ -54,19 +62,5 @@ attr_accessor :title, :price
     result = data.map{|film| Film.new(film)}
     return result
   end
-
-  # def delete_all()
-  #   sql = "SELECT * FROM films"
-  #   film_data = SqlRunner.run(sql)
-  #   return Film.map_items(film_data)
-  # end
-
-# => Display the films each customer has seen
-
-  # def customer()
-  #   sql = "SELECT customer.*
-  #         FROM "
-  #
-  # end
 
 end

@@ -39,28 +39,32 @@ class Customer
 
 # => Display all the films a particular customer has bought ticket for
   def films()
-    sql = "SELECT films.* FROM films
-    INNER JOIN tickets ON tickets.film_id = films.id
-    WHERE customer_id = $1"
+    sql = "SELECT films.* FROM films INNER JOIN tickets ON tickets.film_id = films.id WHERE customer_id = $1"
     values = [@id]
     film_data = SqlRunner.run(sql, values)
     return Film.map_items(film_data)
   end
 
+# => Number of tickets each customer has bought
+  def number_of_films()
+    sql = "SELECT * FROM tickets where customer_id = $1"
+    values = [@id]
+    ticket_data = SqlRunner.run(sql, values)
+    return ticket_data.count
+  end
+
   # =>  This method returns array of tickets bought per film
   def tickets()
-  sql = "SELECT * FROM tickets where film_id = $1"
-  values = [@id]
-  ticket_data = SqlRunner.run(sql, values)
-  return ticket_data.map{|ticket| Ticket.new(ticket)}
-end
+    sql = "SELECT * FROM tickets where customer_id = $1"
+    values = [@id]
+    ticket_data = SqlRunner.run(sql, values)
+    return ticket_data.map{|ticket| Ticket.new(ticket)}
+  end
 
 # => buy a ticket, deducts price of ticket per film from customer funds
   def buy_a_ticket()
     tickets = self.tickets()
-    binding.pry
     ticket_price = tickets.map{|ticket| ticket.price}
-    binding.pry
     return @funds - ticket_price
   end
 
