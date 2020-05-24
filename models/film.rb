@@ -38,7 +38,7 @@ attr_accessor :title, :price
 
 # =>  Display all the customers for a particular film
   def customers()
-    sql = "SELECT customers.* FROM customers INNER JOIN tickets ON customer.id = tickets.customer_id WHERE film_id = $1"
+    sql = "SELECT customers.* FROM customers INNER JOIN tickets ON tickets.customer_id = customer_id WHERE film_id = $1"
     values = [@id]
     customer_data = SqlRunner.run(sql, values)
     return Customer.map_items(customer_data)

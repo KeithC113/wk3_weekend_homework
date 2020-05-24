@@ -47,6 +47,23 @@ class Customer
     return Film.map_items(film_data)
   end
 
+  # =>  This method returns array of tickets bought per film
+  def tickets()
+  sql = "SELECT * FROM tickets where film_id = $1"
+  values = [@id]
+  ticket_data = SqlRunner.run(sql, values)
+  return ticket_data.map{|ticket| Ticket.new(ticket)}
+end
+
+# => buy a ticket, deducts price of ticket per film from customer funds
+  def buy_a_ticket()
+    tickets = self.tickets()
+    binding.pry
+    ticket_price = tickets.map{|ticket| ticket.price}
+    binding.pry
+    return @funds - ticket_price
+  end
+
 # => Delete all the entries of Customer class
   def self.delete_all()
     sql = "DELETE FROM customers"
@@ -54,15 +71,8 @@ class Customer
   end
 
   def self.map_items(data)
-    result = data.map{|customer| Customer.new(star)}
+    result = data.map{|customer| Customer.new(customer)}
     return result
   end
-
-
-  # def delete_all()
-  #   sql = "SELECT * FROM customers"
-  #   customer_data = SqlRunner.run(sql)
-  #   return Customer.map_items(customer_data)
-  # end
 
 end
